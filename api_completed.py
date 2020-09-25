@@ -5,7 +5,7 @@ import tornado.options
 import logging
 import random
 
-from prometheus_client import REGISTRY
+from prometheus_client import Histogram, Counter, REGISTRY
 from prometheus_client.exposition import choose_encoder
 
 
@@ -17,6 +17,18 @@ class MetricsHandler(tornado.web.RequestHandler):
         )
         self.set_header("Content-Type", content_type)
         self.write(encoder(REGISTRY))
+
+
+RESPONSE_STATUS = Counter(
+    "response_status",
+    "Response Status",
+    labelnames=["status"],
+)
+
+RESPONSE_TIME = Histogram(
+    "response_time",
+    "Response Time",
+)
 
 
 class RandomHandler(tornado.web.RequestHandler):
@@ -34,6 +46,10 @@ class RandomHandler(tornado.web.RequestHandler):
         self.set_status(status_code)
         end = time.time()
         time_taken = end - start
+
+        RESPONSE_STATUS.labels(status=str(status_code)).inc()
+        RESPONSE_TIME.observe(time_taken)
+
 
 def make_app(options):
     return tornado.web.Application([
