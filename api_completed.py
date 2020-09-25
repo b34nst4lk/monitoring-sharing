@@ -76,7 +76,7 @@ if __name__ == "__main__":
     app = make_app(options)
     app.listen(options.port)
 
-    logging.info("Starting listing service. PORT: {}, DEBUG: {}".format(
+    logging.info("Starting app. PORT: {}, DEBUG: {}".format(
         options.port, options.debug)
     )
 

@@ -35,6 +35,7 @@ class RandomHandler(tornado.web.RequestHandler):
         end = time.time()
         time_taken = end - start
 
+
 def make_app(options):
     return tornado.web.Application([
         (r"/metrics", MetricsHandler),
@@ -60,7 +61,7 @@ if __name__ == "__main__":
     app = make_app(options)
     app.listen(options.port)
 
-    logging.info("Starting listing service. PORT: {}, DEBUG: {}".format(
+    logging.info("Starting app. PORT: {}, DEBUG: {}".format(
         options.port, options.debug)
     )
 
